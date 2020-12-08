@@ -1,0 +1,19 @@
+{
+  "name": "akashicsbot",
+  "version": "1.0.0",
+  "description": "A discord-bot for Akashic_101",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akashic101/AkashicsBot.git"
+  },
+  "author": "Akashic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akashic101/AkashicsBot/issues"
+  },
+  "homepage": "https://github.com/Akashic101/AkashicsBot#readme"
+}
