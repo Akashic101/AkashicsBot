@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Akashic101/AkashicsBot/issues"
   },
-  "homepage": "https://github.com/Akashic101/AkashicsBot#readme"
+  "homepage": "https://github.com/Akashic101/AkashicsBot#readme",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "discord.js": "^12.5.1",
+    "require-all": "^3.0.0"
+  }
 }
