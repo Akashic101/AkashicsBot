@@ -1,14 +1,88 @@
 const Discord = require(`discord.js`);
 const pjson = require(`../package.json`);
+const Sequelize = require('sequelize');
 
 var channels = require('../json/channels.json');
 
 var prefix = channels.prefix
 
+const member = new Sequelize('database', 'user', 'password', {
+    host: 'localhost',
+    dialect: 'sqlite',
+    logging: false,
+    // SQLite only
+    storage: 'member.sqlite',
+});
+
+const memberModel = member.define('memberModel', {
+    userID: {
+        type: Sequelize.BIGINT,
+        notNull: true,
+        unique: true
+    },
+    username: {
+        type: Sequelize.STRING,
+        notNull: true,
+        unique: true
+    },
+    createdAt: {
+        type: Sequelize.DATE,
+        isDate: true
+    },
+    joinedAt: {
+        type: Sequelize.DATE,
+        isDate: true
+    },
+    messages: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    messagesLastMonth: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    member: {
+        type: Sequelize.BOOLEAN,
+    }
+});
+
+memberModel.sync();
+
 module.exports = async (client, message) => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
+
+    if (!message.author.bot) {
+        try {
+            const match = await memberModel.findOne({
+                where: {
+                    userID: message.author.id
+                }
+            });
+
+            if (match) {
+                match.increment('messages');
+                match.increment('messagesLastMonth');
+            } else {
+                const match = await memberModel.create({
+                    userID: message.author.id,
+                    username: message.author.username,
+                    createdAt: message.author.createdAt,
+                    joinedAt: message.member.joinedAt,
+                    messages: 1,
+                    messagesLastMonth: 1,
+                });
+            }
+        } catch (e) {
+            return message.channel.send({
+                embed: {
+                    color: 0,
+                    description: `${e}`
+                }
+            })
+        }
+    }
 
     if (!message.content.startsWith(prefix) || message.author.bot || message.author.self) return;
 
