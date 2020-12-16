@@ -1,6 +1,6 @@
 {
   "name": "akashicsbot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A discord-bot for Akashic_101",
   "main": "index.js",
   "scripts": {
