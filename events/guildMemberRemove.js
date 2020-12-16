@@ -1,11 +1,63 @@
-var pjson = require(`../package.json`);
+const pjson = require(`../package.json`);
+const Sequelize = require('sequelize');
 const Discord = require(`discord.js`);
 const Canvas = require(`canvas`);
 const fs = require(`fs`);
 
 var channels = require('../json/channels.json');
 
+const member = new Sequelize('database', 'user', 'password', {
+    host: 'localhost',
+    dialect: 'sqlite',
+    logging: false,
+    // SQLite only
+    storage: 'member.sqlite',
+});
+
+const memberModel = member.define('memberModel', {
+    userID: {
+        type: Sequelize.BIGINT,
+        notNull: true,
+        unique: true
+    },
+    username: {
+        type: Sequelize.STRING,
+        notNull: true,
+        unique: true
+    },
+    createdAt: {
+        type: Sequelize.DATE,
+        isDate: true
+    },
+    joinedAt: {
+        type: Sequelize.DATE,
+        isDate: true
+    },
+    messages: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    messagesLastMonth: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    member: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
+    }
+});
+
+memberModel.sync();
+
 module.exports = async (client, member) => {
+
+    await memberModel.update({
+        member: 0
+    }, {
+        where: {
+            userID: member.id
+        }
+    });
 
     const canvas = Canvas.createCanvas(1800, 900);
     const ctx = canvas.getContext('2d');
