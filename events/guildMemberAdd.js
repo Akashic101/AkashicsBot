@@ -1,4 +1,4 @@
-var pjson = require(`../package.json`);
+const pjson = require(`../package.json`);
 const Discord = require(`discord.js`);
 const Canvas = require(`canvas`);
 const fs = require(`fs`);
@@ -20,7 +20,7 @@ module.exports = async (client, member) => {
         return ctx.font;
     };
 
-    const background = await Canvas.loadImage(`images/memberJoined.png`);
+    const background = await Canvas.loadImage(`images/MemberEvent.png`);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     ctx.font = '120px sans-serif';
@@ -37,13 +37,12 @@ module.exports = async (client, member) => {
     //Joined At
     joinedAt = new Date(member.joinedAt);
 
-    ctx.font = '120px sans-serif';
+    ctx.font = '100px sans-serif';
     ctx.fillText(`${joinedAt.getDate()}.${joinedAt.getMonth()}.${joinedAt.getFullYear()} at ${joinedAt.getHours()}:${joinedAt.getMinutes()}.${joinedAt.getSeconds()}`, canvas.width / 11, canvas.height / 1.12);
 
     //Created at At
     var createdAt = new Date(member.user.createdAt);
 
-    ctx.font = '120px sans-serif';
     ctx.fillText(`${createdAt.getDate()}.${createdAt.getMonth()}.${createdAt.getFullYear()} at ${createdAt.getHours()}:${createdAt.getMinutes()}.${createdAt.getSeconds()}`, canvas.width / 11, canvas.height / 1.4);
 
     ctx.beginPath();
@@ -63,6 +62,7 @@ module.exports = async (client, member) => {
         .MessageAttachment('./images/memberJoined_Canvas.png', 'sample.png');
     const embed = new Discord.MessageEmbed()
         .setTitle('Member joined')
+        .setColor('#829b13')
         .attachFiles(attachment)
         .setImage('attachment://sample.png')
         .setTimestamp()

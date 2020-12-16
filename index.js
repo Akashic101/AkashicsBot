@@ -12,7 +12,6 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-
 const files = requireAll({
     dirname: `${__dirname}/events`,
     filter: /^(?!-)(.+)\.js$/
