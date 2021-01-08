@@ -22,6 +22,6 @@
     "discord.js-menu": "^2.2.2",
     "require-all": "^3.0.0",
     "sequelize": "^6.3.5",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.1"
   }
 }
