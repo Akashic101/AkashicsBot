@@ -2,7 +2,7 @@
   "name": "akashicsbot",
   "version": "1.2.0",
   "description": "A discord-bot for Akashic_101",
-  "main": "index.js",
+  "main": "discord_index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,8 +20,9 @@
     "canvas": "^2.6.1",
     "discord.js": "^12.5.1",
     "discord.js-menu": "^2.2.2",
-    "require-all": "^3.0.0",
-    "sequelize": "^6.3.5",
-    "sqlite3": "^5.0.0"
+    "dotenv": "^8.2.0",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2",
+    "tmi.js": "^1.7.5"
   }
 }
