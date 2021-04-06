@@ -6,81 +6,80 @@ var channels = require('../json/channels.json');
 
 var prefix = channels.prefix
 
-const member = new Sequelize('database', 'user', 'password', {
-    host: 'localhost',
-    dialect: 'sqlite',
+const serverDB = new Sequelize(`database`, `user`, `password`, {
+    host: `localhost`,
+    dialect: `sqlite`,
     logging: false,
     // SQLite only
-    storage: 'member.sqlite',
+    storage: `serverDB.sqlite`,
+    timestamps: false,
 });
 
-const memberModel = member.define('memberModel', {
-    userID: {
-        type: Sequelize.BIGINT,
-        notNull: true,
-        unique: true
+const user = serverDB.define(`users`, {
+    id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        unique: true,
+    },
+    user_id: {
+        type: Sequelize.STRING,
+        unique: true,
     },
     username: {
         type: Sequelize.STRING,
-        notNull: true,
-        unique: true
+        unique: true,
     },
-    createdAt: {
+    joined_at: {
         type: Sequelize.DATE,
-        isDate: true
-    },
-    joinedAt: {
-        type: Sequelize.DATE,
-        isDate: true
+        unique: false,
     },
     messages: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 1,
+        allowNull: false,
     },
-    messagesLastMonth: {
+    messages_last_month: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 1,
+        allowNull: false,
     },
-    member: {
-        type: Sequelize.BOOLEAN,
+    messages_last_year: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
     }
-});
-
-memberModel.sync();
+})
 
 module.exports = async (client, message) => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    if (!message.author.bot) {
+    if (!message.author.bot || !message.author.self) {
         try {
-            const match = await memberModel.findOne({
+            var userMatch = user.findOne({
                 where: {
-                    userID: message.author.id
-                }
-            });
-
-            if (match) {
-                match.increment('messages');
-                match.increment('messagesLastMonth');
-            } else {
-                const match = await memberModel.create({
-                    userID: message.author.id,
-                    username: message.author.username,
-                    createdAt: message.author.createdAt,
-                    joinedAt: message.member.joinedAt,
-                    messages: 1,
-                    messagesLastMonth: 1,
-                });
-            }
-        } catch (e) {
-            return message.channel.send({
-                embed: {
-                    color: 0,
-                    description: `${e}`
+                    user_id: message.author.id
                 }
             })
+
+            if (userMatch) {
+                userMatch.increment(`messages`, `messages_last_month`, `messages_last_year`, {
+                    by: 1
+                })
+            } else {
+                var member = client.members.cache.get(message.author.id);
+
+                var userMatch = await user.create({
+                    user_id: message.author.id,
+                    username: message.author.tag,
+                    joined_at: member.joinedAt
+                })
+
+                console.log(`Created member: \n ID: ${userMatch.user_id} \n Username: ${userMatch.username} \n Joined at: ${userMatch.joined_at}`)
+            }
+        } catch (e) {
+            return console.log(e);
         }
     }
 
