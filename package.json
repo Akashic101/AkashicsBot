@@ -21,7 +21,7 @@
     "discord.js": "^12.5.1",
     "discord.js-menu": "^2.2.2",
     "dotenv": "^8.2.0",
-    "sequelize": "^6.6.2",
+    "sequelize": "^6.21.2",
     "sqlite3": "^5.0.2",
     "tmi.js": "^1.7.5"
   }
